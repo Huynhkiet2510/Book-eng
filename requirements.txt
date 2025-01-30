@@ -1,5 +1,8 @@
-Flask==2.0.1
-gunicorn==20.1.0
-opencv-python==4.5.3.56
-ultralytics==8.0.29
-waitress==2.1.2
+flask
+opencv-python
+numpy
+werkzeug
+ultralytics
+waitress
+Pillow
+gunicorn
