@@ -3,6 +3,7 @@ import cv2
 import numpy as np
 from ultralytics import YOLO
 import io
+import os  # Thêm thư viện os để lấy giá trị cổng từ biến môi trường
 
 app = Flask(__name__)
 
@@ -39,4 +40,6 @@ def process_frame():
     return send_file(io.BytesIO(buffer), mimetype='image/jpeg')
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    # Sử dụng cổng mà Render cung cấp
+    port = int(os.environ.get("PORT", 5000))  # Mặc định là 5000 nếu không có cổng
+    app.run(host='0.0.0.0', port=port)
