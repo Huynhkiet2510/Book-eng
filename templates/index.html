@@ -5,90 +5,183 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>YOLO Object Detection</title>
     <style>
-        /* Global Styles */
+        /* Ẩn video */
+        #video {
+            display: none;
+        }
+
+        /* General Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Body Styling */
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(to bottom, #6a11cb, #2575fc);
+            color: #fff;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            margin: 0;
+            flex-direction: column;
+            padding: 20px;
+            text-align: center;
             overflow: hidden;
         }
 
+        /* Heading */
         h1 {
-            position: absolute;
-            top: 20px;
-            font-size: 36px;
-            color: #333;
-            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
-            margin: 0;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: #93f1ee;
+            text-transform: uppercase;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
         }
 
-        /* Video and Canvas Styling */
-        #video {
-            display: none; /* Ẩn video */
+        /* Subtitle or description */
+        .description {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            color: #f7f7f7;
+            font-style: italic;
+            max-width: 700px;
         }
 
+        /* Button Styling */
+        .start-btn {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+        .start-btn:hover {
+            background-color: #45a049;
+        }
+
+        /* Video and Canvas Containers */
         #canvas {
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
             width: 100%;
-            max-width: 800px;
+            max-width: 640px;
             height: auto;
+            border: 3px solid #4CAF50;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
             display: block;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            transition: transform 0.3s ease;
         }
 
-        /* Styling for responsiveness */
+        #canvas:hover {
+            transform: scale(1.05);
+        }
+
+        /* Footer Styling */
+        footer {
+            position: absolute;
+            bottom: 20px;
+            font-size: 0.8rem;
+            color: #f7f7f7;
+        }
+
+        footer a {
+            color: #93f1ee;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Media Query for Mobile Devices */
         @media (max-width: 768px) {
             h1 {
-                font-size: 28px;
-                top: 10px;
+                font-size: 2rem;
             }
 
-            #canvas {
+            .description {
+                font-size: 1rem;
+                margin-bottom: 20px;
+            }
+
+            #video, #canvas {
                 max-width: 100%;
+                margin: 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            #video, #canvas {
+                max-width: 100%;
+                width: 90%;
+                margin: 10px;
+            }
+
+            .start-btn {
+                padding: 10px 20px;
+                font-size: 0.9rem;
             }
         }
     </style>
 </head>
 <body>
-    <h1>YOLO Object Detection</h1>
+    <h1>Learn English with Object Detection</h1>
+    <div class="description">
+        This project uses YOLO object detection to help learn English by recognizing objects in real-time through your webcam. Simply start the detection and see how it works!
+    </div>
+    <button class="start-btn" onclick="startDetection()">Start Detection</button>
     <video id="video" autoplay></video>
     <canvas id="canvas"></canvas>
+
+    <footer>
+        <p>Created with ❤️ by <a href="https://yourwebsite.com">Group 4</a></p>
+    </footer>
 
     <script>
         const video = document.getElementById("video");
         const canvas = document.getElementById("canvas");
         const context = canvas.getContext("2d");
 
-        // Access camera
-        navigator.mediaDevices.getUserMedia({ video: true }).then(stream => {
-            video.srcObject = stream;
-        });
+        // Start video feed when button clicked
+        function startDetection() {
+            navigator.mediaDevices.getUserMedia({ video: true }).then(stream => {
+                video.srcObject = stream;
+            });
 
-        video.addEventListener("play", () => {
-            setInterval(() => {
-                canvas.width = video.videoWidth;
-                canvas.height = video.videoHeight;
-                context.drawImage(video, 0, 0, canvas.width, canvas.height);
-                canvas.toBlob(blob => {
-                    fetch("/process_frame", {
-                        method: "POST",
-                        body: blob,
-                    })
-                        .then(response => response.blob())
-                        .then(processedBlob => {
-                            const img = new Image();
-                            img.src = URL.createObjectURL(processedBlob);
-                            img.onload = () => {
-                                context.drawImage(img, 0, 0, canvas.width, canvas.height);
-                            };
-                        });
-                }, "image/jpeg");
-            }, 200);
-        });
+            video.addEventListener("play", () => {
+                setInterval(() => {
+                    canvas.width = video.videoWidth;
+                    canvas.height = video.videoHeight;
+                    context.drawImage(video, 0, 0, canvas.width, canvas.height);
+                    canvas.toBlob(blob => {
+                        fetch("/process_frame", {
+                            method: "POST",
+                            body: blob,
+                        })
+                            .then(response => response.blob())
+                            .then(processedBlob => {
+                                const img = new Image();
+                                img.src = URL.createObjectURL(processedBlob);
+                                img.onload = () => {
+                                    context.drawImage(img, 0, 0, canvas.width, canvas.height);
+                                };
+                            });
+                    }, "image/jpeg");
+                }, 200);
+            });
+        }
     </script>
 </body>
 </html>
