@@ -4,11 +4,21 @@ import numpy as np
 from ultralytics import YOLO
 import io
 import os  # Thêm thư viện os để lấy giá trị cổng từ biến môi trường
+import gdown  # Thư viện gdown để tải file từ Google Drive
 
 app = Flask(__name__)
 
+# Đường dẫn tới file yolov8n.pt
+model_path = "yolov8n.pt"
+
+# Kiểm tra nếu file đã tồn tại chưa, nếu chưa thì tải về
+if not os.path.exists(model_path):
+    print("Downloading YOLO model from Google Drive...")
+    url = "https://drive.google.com/uc?id=1qBw9RFCPp8Cavzu-On9CVtTCPgkadpzJ"  # ID file từ Google Drive
+    gdown.download(url, model_path, quiet=False)
+
 # Load the YOLO model
-model = YOLO('yolov8n.pt')
+model = YOLO(model_path)
 
 @app.route('/')
 def index():
