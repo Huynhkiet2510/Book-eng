@@ -152,7 +152,7 @@
         const canvas = document.getElementById("canvas");
         const context = canvas.getContext("2d");
 
-        // Start video feed when button clicked
+       
         function startDetection() {
             navigator.mediaDevices.getUserMedia({ video: true }).then(stream => {
                 video.srcObject = stream;
