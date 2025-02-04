@@ -12,7 +12,7 @@ logging.basicConfig(level=logging.DEBUG)
 app = Flask(__name__)
 
 
-model = YOLO('yolov8-tiny.pt')
+model = YOLO('yolov8n.pt')
 
 @app.route('/')
 def index():
