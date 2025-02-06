@@ -1,9 +1,0 @@
-flask
-opencv-python
-numpy
-werkzeug
-ultralytics
-waitress
-Pillow
-gunicorn
-gdown
